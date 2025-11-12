@@ -765,6 +765,14 @@
                 font-size: 0.85rem;
             }
         }
+        .btn {
+            border-radius: 5px;
+        }
+
+        .btn a {
+            padding: 10px 5px;
+            color: white;
+        }
     </style>
 </head>
 <body>
@@ -774,7 +782,6 @@
             <div class="container">
                 <div class="contact-info">
                     <span><i class="fas fa-phone"></i> (0271) 652061</span>
-                    <span><i class="fas fa-envelope"></i> info@serabinotosuman.com</span>
                 </div>
             </div>
         </div>
@@ -909,27 +916,7 @@
                         <a href="https://wa.me/6287783847886?text=Halo%2C%20saya%20tertarik%20dengan%20produk%20Anda"><i class="fab fa-whatsapp"></i></a>
                     </div>
                 </div>
-                <div class="footer-column">
-                    <h3>Kontak Kami</h3>
-                    <p><i class="fas fa-map-marker-alt"></i> Jl. Sutan Syahrir No.106, Kepatihan Kulon, Kec. Jebres, Kota Surakarta, Jawa Tengah, 57129</p>
-                    <p><i class="fas fa-phone"></i> +6287854136892 </p>
-                    <p><i class="fab fa-instagram"></i> serabinotosumanny.lidia</p>
-                </div>
-                <div class="footer-column">
-                    <h3>Jam Buka</h3>
-                    <p>Senin - Minggu: 05.00 - 12.00</p>
-                    <p>Tanggal Merah: Buka</p>
-                    <p>Pengiriman: 05.00 - 12.00</p>
-                </div>
-                <div class="footer-column">
-                    <h3>Link Cepat</h3>
-                    <ul>
-                        <li><a href="#">Beranda</a></li>
-                        <li><a href="#about">Tentang Kami</a></li>
-                        <li><a href="#menu">Menu</a></li>
-                        <li><a href="#maps">Lokasi Kami</a></li>
-                    </ul>
-                </div>
+
             </div>
             <div class="footer-bottom">
                 <p>&copy; 2025 Serabi Notosuman. Created by Teknik Informatika Solotech University</p>
@@ -943,7 +930,7 @@
     <script>
         // Database structure and sample data for branches
         const branches = [
-            {
+           {
                 id: 1,
                 name: "Serabi Notosuman Widuran Solo",
                 address: "Jl. Sutan Syahrir No.106, Kepatihan Kulon, Kec. Jebres, Kota Surakarta, Jawa Tengah, 57129",
@@ -952,6 +939,7 @@
                 latitude: -7.564619155562401,
                 longitude: 110.82889795331597,
                 services: "Dine-in, Takeaway, Delivery",
+                contact: "http://wa.me/6287783847886",
             },
             {
                 id: 2,
@@ -962,6 +950,8 @@
                 latitude: -7.577267159761813,
                 longitude: 110.82008519564495,
                 services: "Dine-in, Takeaway",
+                contact: "http://wa.me/6287783847886",
+
             },
             {
                 id: 3,
@@ -972,6 +962,7 @@
                 latitude: -7.524969,
                 longitude: 110.599801,
                 services: "Dine-in, Takeaway",
+                contact: "http://wa.me/6285785113556",
             },
             {
                 id: 4,
@@ -982,6 +973,7 @@
                 latitude: -7.797093,
                 longitude: 110.362206,
                 services: "Dine-in, Takeaway",
+                contact: "http://wa.me/6287783847886",
             },
             {
                 id: 5,
@@ -992,6 +984,7 @@
                 latitude: -6.800976,
                 longitude: 110.844592,
                 services: "Dine-in, Takeaway",
+                contact: "http://wa.me/6287783847886",
             },
             {
                 id: 6,
@@ -1002,6 +995,7 @@
                 latitude: -7.871729,
                 longitude: 111.470708,
                 services: "Dine-in, Takeaway",
+                contact: "http://wa.me/6287783847886",
             },
         ];
 
@@ -1034,8 +1028,7 @@
                 });
             });
             
-            // Generate branch selector buttons
-            const branchSelector = document.getElementById('branchSelector');
+           const branchSelector = document.getElementById('branchSelector');
             branches.forEach(branch => {
                 const button = document.createElement('button');
                 button.className = 'branch-btn';
@@ -1046,40 +1039,43 @@
                     document.querySelectorAll('.branch-btn').forEach(btn => {
                         btn.classList.remove('active');
                     });
-                    
+
                     // Add active class to clicked button
                     button.classList.add('active');
-                    
+
                     // Center map on selected branch
                     map.setView([branch.latitude, branch.longitude], 15);
-                    
+
                     // Open popup for selected branch
                     const marker = markers.find(m => m.id === branch.id).marker;
                     marker.openPopup();
-                    
+
                     // Update branch details
                     updateBranchDetails(branch);
                 });
-                
+
                 branchSelector.appendChild(button);
             });
-            
+
             // Set first branch as active by default
             if (branches.length > 0) {
                 document.querySelector('.branch-btn').classList.add('active');
                 updateBranchDetails(branches[0]);
             }
         }
-        
+
         function updateBranchDetails(branch) {
             const branchDetails = document.getElementById('branchDetails');
             branchDetails.innerHTML = `
                 <div class="branch-card">
                     <h4>${branch.name}</h4>
                     <p><i class="fas fa-map-marker-alt"></i> ${branch.address}</p>
-                    <p><i class="fas fa-phone"></i> ${branch.phone}</p>
+                    <p><i class="fas fa-phone"></i>${branch.phone}</p>
                     <p><i class="fas fa-clock"></i> ${branch.hours}</p>
                     <p><i class="fas fa-concierge-bell"></i> ${branch.services}</p>
+                    <div class="btn">
+                       <a href="${branch.contact}">Pesan Sekarang</a>
+                     </div>
                 </div>
             `;
         }
