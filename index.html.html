@@ -927,10 +927,10 @@
     <!-- Leaflet JS -->
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
     
-    <script>
+  <script>
         // Database structure and sample data for branches
         const branches = [
-           {
+            {
                 id: 1,
                 name: "Serabi Notosuman Widuran Solo",
                 address: "Jl. Sutan Syahrir No.106, Kepatihan Kulon, Kec. Jebres, Kota Surakarta, Jawa Tengah, 57129",
@@ -1000,7 +1000,7 @@
         ];
 
         // Initialize the map
-       let map;
+        let map;
         let markers = [];
 
         function initMap() {
@@ -1080,29 +1080,73 @@
                 </div>
             `;
         }
-    
-        // Simple View Counter Functionality
-        function updateViewCounter() {
-            // Get existing view count from localStorage
-            let viewCount = parseInt(localStorage.getItem('serabiNotosumanViewCount')) || 0;
-            
-            // Increment view count
-            viewCount += 1;
-            
-            // Save updated view count to localStorage
-            localStorage.setItem('serabiNotosumanViewCount', viewCount.toString());
-            
-            // Update the display
-            document.getElementById('viewCount').textContent = viewCount.toLocaleString();
-        }
-        
-        // Initialize when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initialize the map
-            initMap();
-            
-            // Initialize view counter
-            updateViewCounter();
+(async () => {
+  const apiUrl = 'https://api-tktt.vercel.app/api/viewCounter';
+  const viewEls = () => Array.from(document.querySelectorAll('.viewCount'));
+
+  function setText(text) {
+    viewEls().forEach(el => el.textContent = text);
+  }
+
+  function timeoutFetch(resource, options = {}, timeout = 7000) {
+    // fetch with timeout
+    return Promise.race([
+      fetch(resource, options),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('Fetch timeout')), timeout)
+      )
+    ]);
+  }
+
+  try {
+    // 1) POST (tambah 1)
+    const postRes = await timeoutFetch(apiUrl, { method: 'POST' }, 7000);
+    if (!postRes.ok) {
+      // coba ambil pesan error dari body jika ada
+      let text = await postRes.text().catch(() => 'No body');
+      console.error('POST failed', postRes.status, text);
+      setText('Error (POST): ' + postRes.status);
+      return;
+    }
+
+    // 2) GET (ambil nilai terbaru)
+    const getRes = await timeoutFetch(apiUrl, { method: 'GET' }, 7000);
+    if (!getRes.ok) {
+      const text = await getRes.text().catch(() => 'No body');
+      console.error('GET failed', getRes.status, text);
+      setText('Error (GET): ' + getRes.status);
+      return;
+    }
+
+    // 3) parse JSON — kalau bukan JSON, tangani
+    let data;
+    try {
+      data = await getRes.json();
+    } catch (err) {
+      const txt = await getRes.text().catch(() => '<no body>');
+      console.error('Response not JSON:', txt);
+      setText('Error: invalid response');
+      return;
+    }
+
+    // 4) tampilkan
+    if (typeof data.views === 'number') {
+      setText(data.views);
+      console.log('Total views:', data.views);
+    } else {
+      console.error('Missing views field in response:', data);
+      setText('Error: bad data');
+    }
+  } catch (err) {
+    // Semua error (network, timeout, CORS, dsb)
+    console.error('Fetch error:', err);
+    // tampilkan pesan ringkas ke user, detail di console
+    setText('Error');
+  }
+})();
+        document.addEventListener('DOMContentLoaded', () => {
+            initMap();     // inisialisasi peta
+            updateViewCount();  // update counter
         });
     </script>
 </body>
