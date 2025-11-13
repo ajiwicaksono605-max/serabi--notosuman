@@ -1081,8 +1081,27 @@
         }
     
         // Simple View Counter Functionality
-        <a href='http://www.freevisitorcounters.com'>freevisitorcounterss Homepage</a> <script type='text/javascript' src='https://www.freevisitorcounters.com/auth.php?id=6aae9b4a49acde90efc15fc0fe16a5a7b6a8b6c0'></script>
-<script type="text/javascript" src="https://freevisitorcounters.com/en/home/counter/1439456/t/2"></script>
-    </script>
+        function updateViewCounter() {
+            // Get existing view count from localStorage
+            let viewCount = parseInt(localStorage.getItem('serabiNotosumanViewCount')) || 0;
+            
+            // Increment view count
+            viewCount += 1;
+            
+            // Save updated view count to localStorage
+            localStorage.setItem('serabiNotosumanViewCount', viewCount.toString());
+            
+            // Update the display
+            document.getElementById('viewCount').textContent = viewCount.toLocaleString();
+        }
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the map
+            initMap();
+            
+            // Initialize view counter
+            updateViewCounter();
+        });
 </body>
 </html>
