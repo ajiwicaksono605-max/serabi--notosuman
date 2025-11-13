@@ -1000,9 +1000,9 @@
         ];
 
         // Initialize the map
-        let map;
+       let map;
         let markers = [];
-        
+
         function initMap() {
             // Create map centered on Solo
             map = L.map('interactiveMap').setView([-7.564619155562401, 110.82889795331597], 10);
@@ -1010,7 +1010,7 @@
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                 attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             }).addTo(map);
-            
+
             // Add markers for each branch
             branches.forEach(branch => {
                 const marker = L.marker([branch.latitude, branch.longitude])
@@ -1021,14 +1021,15 @@
                         <p>Telp: ${branch.phone}</p>
                         <p>Jam: ${branch.hours}</p>
                     `);
-                
+
                 markers.push({
                     id: branch.id,
                     marker: marker
                 });
             });
-            
-           const branchSelector = document.getElementById('branchSelector');
+
+            // Generate branch selector buttons
+            const branchSelector = document.getElementById('branchSelector');
             branches.forEach(branch => {
                 const button = document.createElement('button');
                 button.className = 'branch-btn';
